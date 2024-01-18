@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notre Journée - Quiz</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f7f7f7;
+    }
+
+    #quiz-container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .question {
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+
+    .options {
+      display: flex;
+      justify-content: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #6441d1;
+      color: #fff;
+      transition: background-color 0.3s;
+    }
+
+    button.selected {
+      background-color: #2196f3;
+    }
+
+    p {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img src="img.png" width="250"/>
+  <h1>ITS TIIIMMME FOR A QUIZZZZZZZZ (oui j'aime les jeux)</h1><hr /><br />
+
+  <div id="question" class="question"></div>
+  <div id="options" class="options"></div>
+
+  <br /><br />
+  <button onclick="checkAnswer()">QUESTION SUIVANTE</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  const questions = [
+  {
+      question: "Quelle était la première chose que j'ai pu te dire quand on s'est vu?",
+      options: ["J'AI FROID", "Wow, tu es magnifique", "TU ES EN RETARD !!!", "Tu m'as manqué !!"],
+      correctAnswer: "J'AI FROID"
+    },
+    {
+      question: "Quelle activité avons-nous faite en premier ensemble ?",
+      options: ["Regarder un film", "Prendre un café", "Faire une promenade", "Aller au musée"],
+      correctAnswer: "Aller au musée"
+    },
+    {
+      question: "En allant au musée, qui nous faisait le guide pour ne pas qu'on se perde dans Paris ?",
+      options: ["Willy", "Roxana", "Au hasard MDR", "Willy et Roxana"],
+      correctAnswer: "Willy et Roxana"
+    },
+    {
+      question: "Comment s'appelle le petit enfant difficile qui prenait des photos avec sa maman ?",
+      options: ["Baptiste", "Antoine", "Pierre", "ChereLuise"],
+      correctAnswer: "Baptiste"
+    },
+    {
+      question: "QUI A TOUT LE TEMPS ENVIE DE FAIRE PIPI ? Indice : \"gngn tu connais pas la vessie d'une femme\"",
+      options: ["Wilson (mauvaise réponse)", "Roxana (très bonne réponse)"],
+      correctAnswer: "Roxana (très bonne réponse)"
+    },
+    {
+      question: "Qu'est-ce que Wilson a prit au resto ? (super facile)",
+      options: ["Un burger", "Du poisson (ce que tu adores)", "Un boeuf bourguignon", "UN JUS DE MANGUE"],
+      correctAnswer: "Un boeuf bourguignon"
+    },
+    {
+      question: "Ben Laden est-il afghan ?",
+      options: ["non", "oui", "jsp"],
+      correctAnswer: "non"
+    },
+    {
+      question: "Est-ce que Wilson avait froid au resto? (la réponse est non)",
+      options: ["non", "oui (bonne réponse)", "jsp"],
+      correctAnswer: "oui (bonne réponse)"
+    },
+    {
+      question: "Qui a embrassé qui ?",
+      options: ["Wilson a embrassé Roxana", "Roxana a embrassé Wilson", "on s'en fiche ???"],
+      correctAnswer: "Wilson a embrassé Roxana"
+    },
+    {
+      question: "Est-ce que Wilson a envie de te voir encore et encore ? (tu vas pas savoir la réponse, faudra imaginer....)",
+      options: ["oui putain", "bof", "non"],
+      correctAnswer: "oui putain"
+    },
+  ];
+
+  let currentQuestion = 0;
+  let correctAnswers = 0;
+
+  function loadQuestion() {
+    const questionElement = document.getElementById('question');
+    const optionsElement = document.getElementById('options');
+    const currentQuestionObj = questions[currentQuestion];
+
+    questionElement.textContent = currentQuestionObj.question;
+
+    optionsElement.innerHTML = '';
+    currentQuestionObj.options.forEach((option, index) => {
+      const button = document.createElement('button');
+      button.textContent = option;
+      button.onclick = () => selectAnswer(button, option);
+      optionsElement.appendChild(button);
+    });
+  }
+
+  function selectAnswer(button, selectedOption) {
+    const buttons = document.querySelectorAll('#options button');
+    buttons.forEach(btn => btn.classList.remove('selected'));
+
+    // Select the clicked button
+    button.classList.add('selected');
+  }
+
+  function checkAnswer() {
+    const selectedButton = document.querySelector('#options button.selected');
+    const selectedOption = selectedButton ? selectedButton.textContent : null;
+
+    // Check if an option is selected
+    if (selectedOption === null) {
+      alert("tu dois selectionner une réponse azizam !");
+      return;
+    }
+
+    const correctAnswer = questions[currentQuestion].correctAnswer;
+
+    if (selectedOption === correctAnswer) {
+      correctAnswers++;
+    }
+
+    currentQuestion++;
+
+    if (currentQuestion < questions.length) {
+      loadQuestion();
+      selectedButton.classList.remove('selected');
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    const resultElement = document.getElementById('result');
+    const score = correctAnswers;
+
+    let message = `Voici ta petite note : ${score} / ${questions.length}... `;
+
+    if (score < 3) {
+        message += " Vraiment nul.";
+    } else if (score >= 3 && score < 6) {
+        message += " Mouais.";
+    } else if (score >= 6 && score < 8) {
+        message += " Pas mal.";
+    } else {
+        message += " On fait des bébés ?";
+    }
+
+    resultElement.textContent = message;
+}
+
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
